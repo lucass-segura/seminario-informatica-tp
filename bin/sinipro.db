@@ -1,0 +1,79 @@
+--GENERAR TABLAS
+-- Tabla para usuarios
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    rol VARCHAR(50) NOT NULL
+);
+
+-- Tabla compañías de seguros.
+CREATE TABLE companias (
+    compania_id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL
+);
+
+-- Tabla clientes asegurados, vinculados a un productor.
+CREATE TABLE asegurados (
+    asegurado_id INT AUTO_INCREMENT PRIMARY KEY,
+    productor_id INT NOT NULL,
+    dni VARCHAR(50) NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    contacto VARCHAR(255),
+    FOREIGN KEY (productor_id) REFERENCES usuarios(id)
+);
+
+-- Tabla siniestros.
+CREATE TABLE siniestros (
+    siniestro_id INT AUTO_INCREMENT PRIMARY KEY,
+    asegurado_id INT NOT NULL,
+    asesor_id INT NOT NULL,
+    compania_id INT NOT NULL,
+    fecha DATETIME NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    descripcion TEXT,
+    papelera BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (asegurado_id) REFERENCES asegurados(asegurado_id),
+    FOREIGN KEY (asesor_id) REFERENCES usuarios(id),
+    FOREIGN KEY (compania_id) REFERENCES companias(compania_id)
+);
+
+-- Tabla para notas de seguimiento de cada siniestro.
+CREATE TABLE siniestro_notas (
+    nota_id INT AUTO_INCREMENT PRIMARY KEY,
+    siniestro_id INT NOT NULL,
+    fecha_nota DATETIME NOT NULL,
+    nota TEXT NOT NULL,
+    FOREIGN KEY (siniestro_id) REFERENCES siniestros(siniestro_id) ON DELETE CASCADE
+);
+
+
+
+-- GENERAR DATOS.
+-- Usuarios.
+INSERT INTO usuarios (id, email, password, rol) VALUES
+(1, 'productor@sinipro.com', 'productor123', 'productor'),
+(2, 'asesor@sinipro.com', 'asesor123', 'asesor');
+
+-- Compañías.
+INSERT INTO companias (compania_id, nombre) VALUES
+(1, 'Allianz'),
+(2, 'Orbis');
+
+-- Asegurados.
+INSERT INTO asegurados (asegurado_id, productor_id, dni, nombre, contacto) VALUES
+(1, 1, '25111222', 'Lucas Segura', 'lucassegura@email.com'),
+(2, 1, '30333444', 'Maria Rodriguez', '+54 2994119493'),
+(3, 1, '28555666', 'Pedro Suarez', 'pepitosuarez@email.com');
+
+-- Siniestros.
+INSERT INTO siniestros (siniestro_id, numero_siniestro, asegurado_id, asesor_id, compania_id, fecha, estado, descripcion, papelera) VALUES
+(1, 1, 1, 2, 1, '2025-05-10 09:30:00', 'Abierto', 'Impacto leve en paragolpes trasero.', FALSE),
+(2, 2, 2, 2, 2, '2025-05-15 15:00:00', 'En gestión', 'Rotura de luneta por intento de robo.', TRUE),
+(3, 3, 3, 2, 1, '2025-04-20 18:00:00', 'Cerrado', 'Reparación completada.', FALSE);
+
+-- Nota Siniestros.
+INSERT INTO siniestro_notas (siniestro_id, fecha_nota, nota) VALUES
+(1, NOW(), 'Se contactó al asegurado. Enviará fotos del daño.'),
+(1, NOW(), 'Fotos recibidas. Se deriva a la compañía.'),
+(2, NOW(), 'El asegurado solicita enviar el siniestro a la papelera.');

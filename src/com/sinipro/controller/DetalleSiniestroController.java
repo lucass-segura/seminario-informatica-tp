@@ -52,6 +52,7 @@ public class DetalleSiniestroController {
         vista.btnGuardar.setEnabled(editable);
         vista.cmbEstado.setEnabled(editable);
         vista.btnAgregarNota.setEnabled(editable);
+        vista.txtDescripcion.setEditable(editable);
     }
 
     private void initListeners() {
@@ -97,6 +98,12 @@ public class DetalleSiniestroController {
         if (!nuevoEstado.equals(siniestroActual.getEstado())) {
             siniestroDAO.actualizarEstado(siniestroActual.getId(), nuevoEstado);
         }
+        
+        String nuevaDescripcion = vista.txtDescripcion.getText();
+        if (!nuevaDescripcion.equals(siniestroActual.getDescripcion())) {
+            siniestroDAO.actualizarDescripcion(siniestroActual.getId(), nuevaDescripcion);
+        }
+        
         cerrarVentana();
     }
 

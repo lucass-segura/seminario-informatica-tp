@@ -44,9 +44,6 @@ public class DetalleSiniestroView extends JFrame {
         panelDetalles.add(createDetailRow("Estado:", cmbEstado));
         panelDetalles.add(Box.createRigidArea(new Dimension(0, 10)));
         
-        txtDescripcion.setEditable(false);
-        txtDescripcion.setFont(new Font("SansSerif", Font.ITALIC, 12));
-        txtDescripcion.setBackground(new Color(240, 240, 240));
         txtDescripcion.setWrapStyleWord(true);
         txtDescripcion.setLineWrap(true);
         JScrollPane descScrollPane = new JScrollPane(txtDescripcion);

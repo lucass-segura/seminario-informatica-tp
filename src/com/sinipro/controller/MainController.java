@@ -4,6 +4,8 @@ import com.sinipro.dao.SiniestroDAO;
 import com.sinipro.model.Siniestro;
 import com.sinipro.model.User;
 import com.sinipro.view.DetalleSiniestroView;
+import com.sinipro.view.GestionAsesoresView;
+import com.sinipro.view.GestionCompaniaView;
 import com.sinipro.view.MainView;
 import com.sinipro.view.NuevoSiniestroView;
 import com.sinipro.view.SolicitudesView;
@@ -27,8 +29,10 @@ public class MainController {
     }
 
     private void configurarVistaPorRol() {
+        boolean esProductor = "productor".equalsIgnoreCase(usuarioLogueado.getRol());
         vista.btnPapelera.setText("Solicitudes");
         vista.btnPapelera.setVisible(true);
+        vista.menuGestionar.setVisible(esProductor);
     }
 
     private void initListeners() {
@@ -59,15 +63,27 @@ public class MainController {
         });
 
         vista.btnPapelera.addActionListener(e -> abrirVentanaSolicitudes());
+        
+        vista.itemGestionarCompanias.addActionListener(e -> {
+            GestionCompaniaView gestionCompaniaView = new GestionCompaniaView(vista);
+            new GestionCompaniaController(gestionCompaniaView);
+            gestionCompaniaView.setVisible(true);
+        });
+
+        vista.itemGestionarAsesores.addActionListener(e -> {
+            GestionAsesoresView gestionAsesoresView = new GestionAsesoresView(vista);
+            new GestionAsesoresController(gestionAsesoresView);
+            gestionAsesoresView.setVisible(true);
+        });
     }
-    
+
     private void abrirDetalleSiniestro(Siniestro siniestro) {
         vista.setVisible(false);
         DetalleSiniestroView detalleView = new DetalleSiniestroView();
         new DetalleSiniestroController(detalleView, siniestro, this, usuarioLogueado);
         detalleView.setVisible(true);
     }
-    
+
     private void abrirVentanaSolicitudes() {
         vista.setVisible(false);
         SolicitudesView solicitudesView = new SolicitudesView();
@@ -78,15 +94,20 @@ public class MainController {
     public void refrescarTablaSiniestros() {
         String filtro = vista.txtBuscar.getText();
         this.siniestrosEnTabla = dao.buscarSiniestros(filtro);
-        actualizarTabla(this.siniestrosEnTabla);
+        actualizarTabla(this.siniestrosEnTabla, filtro);
     }
 
-    private void actualizarTabla(List<Siniestro> siniestros) {
+    private void actualizarTabla(List<Siniestro> siniestros, String filtro) {
         vista.modeloTabla.setRowCount(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        for (Siniestro s : siniestros) {
-            Object[] fila = {s.getNumeroSiniestro(), s.getAsegurado().getNombre(), sdf.format(s.getFecha()), s.getEstado(), s.getCompania().getNombre(), s.getDescripcion()};
-            vista.modeloTabla.addRow(fila);
+        if (siniestros.isEmpty() && !filtro.isEmpty()) {
+            vista.cardLayout.show(vista.centerPanel, "label");
+        } else {
+            vista.cardLayout.show(vista.centerPanel, "tabla");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            for (Siniestro s : siniestros) {
+                Object[] fila = {s.getNumeroSiniestro(), s.getAsegurado().getNombre(), sdf.format(s.getFecha()), s.getEstado(), s.getCompania().getNombre(), s.getDescripcion()};
+                vista.modeloTabla.addRow(fila);
+            }
         }
     }
 

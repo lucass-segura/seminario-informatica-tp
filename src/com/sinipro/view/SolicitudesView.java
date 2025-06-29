@@ -4,7 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SolicitudesView extends JFrame {
-    public JTable tablaSolicitudes;
+    private static final long serialVersionUID = 1L;
+	public JTable tablaSolicitudes;
     public JButton btnRestaurar = new JButton("Restaurar Siniestro");
     public JButton btnEliminarPermanente = new JButton("Eliminar Permanente");
     public JButton btnVolver = new JButton("Volver");

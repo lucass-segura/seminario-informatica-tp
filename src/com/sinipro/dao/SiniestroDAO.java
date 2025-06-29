@@ -19,6 +19,7 @@ public class SiniestroDAO {
     private static final String RESTAURAR_DESDE_PAPELERA = "UPDATE siniestros SET papelera = FALSE WHERE siniestro_id = ?";
     private static final String ELIMINAR_PERMANENTE = "UPDATE siniestros SET estado = 'Eliminado', papelera = FALSE WHERE siniestro_id = ?";
     private static final String ACTUALIZAR_ESTADO = "UPDATE siniestros SET estado = ? WHERE siniestro_id = ?";
+    private static final String ACTUALIZAR_DESCRIPCION = "UPDATE siniestros SET descripcion = ? WHERE siniestro_id = ?";
     private static final String CREATE_SINIESTRO = "INSERT INTO siniestros (numero_siniestro, asegurado_id, asesor_id, compania_id, fecha, estado, descripcion) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String GET_LAST_NUMERO = "SELECT numero_siniestro FROM siniestros ORDER BY siniestro_id DESC LIMIT 1";
 
@@ -63,6 +64,10 @@ public class SiniestroDAO {
     }
     public boolean actualizarEstado(int siniestroId, String nuevoEstado) {
         return ejecutarUpdate(ACTUALIZAR_ESTADO, nuevoEstado, siniestroId);
+    }
+
+    public boolean actualizarDescripcion(int siniestroId, String nuevaDescripcion) {
+        return ejecutarUpdate(ACTUALIZAR_DESCRIPCION, nuevaDescripcion, siniestroId);
     }
 
     private String getSiguienteNumeroSiniestro(Connection con) throws Exception {

@@ -1,4 +1,4 @@
---GENERAR TABLAS
+-- GENERAR TABLAS
 -- Tabla para usuarios
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -27,6 +27,7 @@ CREATE TABLE asegurados (
 CREATE TABLE siniestros (
     siniestro_id INT AUTO_INCREMENT PRIMARY KEY,
     asegurado_id INT NOT NULL,
+    numero_siniestro INT NOT NULL,
     asesor_id INT NOT NULL,
     compania_id INT NOT NULL,
     fecha DATETIME NOT NULL,
